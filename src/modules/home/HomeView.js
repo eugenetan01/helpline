@@ -3,6 +3,48 @@ import { StyleSheet, View, Image, SafeAreaView, Alert } from 'react-native';
 import { Button } from '../../components';
 import { fonts, colors } from '../../styles';
 import { Text } from '../../components/StyledText';
+import Realm from 'realm';
+
+const TaskSchema = {
+  name: 'Task',
+  properties: {
+    _id: 'int',
+    name: 'string',
+    status: 'string?',
+  },
+  primaryKey: '_id',
+};
+
+(async () => {
+  const realm = await Realm.open({
+    path: 'myrealm',
+    schema: [TaskSchema],
+  });
+
+  /*   realm.write(() => {
+    task1 = realm.create('Task', {
+      _id: 1,
+      name: 'go grocery shopping',
+      dateCreated: Date.now(),
+      status: 'Open',
+    });
+    task2 = realm.create('Task', {
+      _id: 2,
+      name: 'go exercise',
+      dateCreated: Date.now(),
+      status: 'Open',
+    });
+    console.log(`created two tasks: ${task1.name} & ${task2.name}`);
+  }); */
+  const tasks = realm.objects('Task');
+  console.log(`The lists of tasks are: ${tasks.map(task => task._id)}`);
+
+  realm.write(() => {
+    const myTask = realm.objectForPrimaryKey('Task', 2);
+    realm.delete(myTask);
+    console.log('deleted');
+  });
+})();
 
 export default function HomeScreen({ isExtended, setIsExtended }) {
   // const rnsUrl = 'https://reactnativestarter.com';
