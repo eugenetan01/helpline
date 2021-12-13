@@ -38,14 +38,14 @@ const headerBackground = require('../../../assets/images/topBarBg.png');
 
 const StackNavigationData = [
   {
-    name: 'React Native Starter',
+    name: 'Helpline',
     component: TabNavigator,
     headerLeft: null,
     headerBackground: { source: headerBackground },
     headerTitleStyle: {
       fontFamily: fonts.primaryRegular,
       color: colors.white,
-      fontSize: 18,
+      fontSize: 27,
     },
   },
   {

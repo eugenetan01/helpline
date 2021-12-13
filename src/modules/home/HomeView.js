@@ -1,11 +1,6 @@
 import React from 'react';
-import {
-  StyleSheet,
-  View,
-  TouchableOpacity,
-  ImageBackground,
-} from 'react-native';
-
+import { StyleSheet, View, Image, SafeAreaView, Alert } from 'react-native';
+import { Button } from '../../components';
 import { fonts, colors } from '../../styles';
 import { Text } from '../../components/StyledText';
 
@@ -20,55 +15,37 @@ export default function HomeScreen({ isExtended, setIsExtended }) {
   //     }
   //   });
   // };
+  const handlePress = () => {
+    Alert.alert(
+      'Help is on the way',
+      'We have alerted everyone nearby. Help is on the way!',
+    );
+  };
 
   return (
-    <View style={styles.container}>
-      <ImageBackground
-        source={require('../../../assets/images/background.png')}
-        style={styles.bgImage}
+    <SafeAreaView style={styles.container}>
+      <Image
+        source={require('../../../assets/images/sos.png')}
+        style={styles.Image}
         resizeMode="cover"
-      >
-        <View style={styles.section}>
-          <Text size={20} white>
-            Home
-          </Text>
-        </View>
-        <View style={styles.section}>
-          <Text color="#19e7f7" size={15}>
-            The smartest Way to build your mobile app
-          </Text>
-          <Text size={30} bold white style={styles.title}>
-            React Native Starter
-          </Text>
-        </View>
-        <View style={[styles.section, styles.sectionLarge]}>
-          <Text color="#19e7f7" hCenter size={15} style={styles.description}>
-            {' '}
-            A powerful starter project that bootstraps development of your
-            mobile application and saves you $20 000*
-          </Text>
-          <View style={styles.priceContainer}>
-            <View style={{ flexDirection: 'row' }}>
-              <Text white bold size={50} style={styles.price}>
-                {isExtended ? '$499' : '$99'}
-              </Text>
-            </View>
-            <TouchableOpacity
-              style={styles.priceLink}
-              onPress={() =>
-                isExtended ? setIsExtended(false) : setIsExtended(true)
-              }
-            >
-              <Text white size={14}>
-                {isExtended
-                  ? 'Multiple Applications License'
-                  : 'Single Application License'}
-              </Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      </ImageBackground>
-    </View>
+      />
+      <View style={styles.demoButtonsContainer}>
+        <Button
+          style={[styles.demoButton, { flexBasis: '60%' }]}
+          secondary
+          caption="HELP"
+          onPress={handlePress}
+        />
+      </View>
+      <View style={styles.containerPeople}>
+        <Text style={styles.titleDescription}>
+          <Text>Number of people nearby:</Text>
+        </Text>
+        <Text style={styles.title}>
+          <Text>30</Text>
+        </Text>
+      </View>
+    </SafeAreaView>
   );
 }
 
@@ -77,10 +54,21 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'space-around',
+    marginTop: '20%',
+  },
+  containerPeople: {
+    flex: 1,
+    alignItems: 'flex-start',
+    marginTop: '10%',
   },
   bgImage: {
     flex: 1,
     marginHorizontal: -20,
+  },
+  Image: {
+    width: 250,
+    height: 250,
+    alignSelf: 'center',
   },
   section: {
     flex: 1,
@@ -103,13 +91,18 @@ const styles = StyleSheet.create({
     lineHeight: 25,
   },
   titleDescription: {
-    color: '#19e7f7',
-    textAlign: 'center',
-    fontFamily: fonts.primaryRegular,
-    fontSize: 15,
+    color: '#000',
+    textAlign: 'right',
+    fontFamily: fonts.primaryBold,
+    fontSize: 25,
   },
   title: {
-    marginTop: 30,
+    color: '#000',
+    textAlign: 'center',
+    fontFamily: fonts.primaryBold,
+    marginTop: 10,
+    fontSize: 20,
+    alignSelf: 'center',
   },
   price: {
     marginBottom: 5,
@@ -117,5 +110,18 @@ const styles = StyleSheet.create({
   priceLink: {
     borderBottomWidth: 1,
     borderBottomColor: colors.primary,
+  },
+  demoButtonsContainer: {
+    flex: 1,
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginTop: 40,
+  },
+  demoButton: {
+    marginTop: 8,
+    marginBottom: 8,
+    height: 100,
   },
 });

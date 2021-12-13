@@ -15,17 +15,15 @@ import { RadioGroup, GridRow } from '../../components';
 
 export default class GridsScreen extends React.Component {
   _getRenderItemFunction = () =>
-    [this.renderRowOne, this.renderRowTwo, this.renderRowThree][
-      this.props.tabIndex
-    ];
+    [this.renderRowOne, this.renderRowTwo, this.renderRowThree][2];
 
-  _openArticle = article => {
+  /*   _openArticle = article => {
     this.props.navigation.navigate('Article', {
       article,
     });
-  };
+  }; */
 
-  renderRowOne = rowData => {
+  /*   renderRowOne = rowData => {
     const cellViews = rowData.item.map(item => (
       <TouchableOpacity key={item.id} onPress={() => this._openArticle(item)}>
         <View style={styles.itemOneContainer}>
@@ -55,9 +53,9 @@ export default class GridsScreen extends React.Component {
         {cellViews}
       </View>
     );
-  };
+  }; */
 
-  renderRowTwo = ({ item }) => (
+  /*   renderRowTwo = ({ item }) => (
     <TouchableOpacity
       key={item.id}
       style={styles.itemTwoContainer}
@@ -71,18 +69,14 @@ export default class GridsScreen extends React.Component {
         <Text style={styles.itemTwoPrice}>{item.price}</Text>
       </View>
     </TouchableOpacity>
-  );
+  ); */
 
   renderRowThree = ({ item }) => (
-    <TouchableOpacity
-      key={item.id}
-      style={styles.itemThreeContainer}
-      onPress={() => this._openArticle(item)}
-    >
+    <TouchableOpacity key={item.id} style={styles.itemThreeContainer}>
       <View style={styles.itemThreeSubContainer}>
-        <Image source={{ uri: item.image }} style={styles.itemThreeImage} />
+        {/*  <Image source={{ uri: item.image }} style={styles.itemThreeImage} /> */}
         <View style={styles.itemThreeContent}>
-          <Text style={styles.itemThreeBrand}>{item.brand}</Text>
+          {/* <Text style={styles.itemThreeBrand}>{item.brand}</Text> */}
           <View>
             <Text style={styles.itemThreeTitle}>{item.title}</Text>
             <Text style={styles.itemThreeSubtitle} numberOfLines={1}>
@@ -90,22 +84,22 @@ export default class GridsScreen extends React.Component {
             </Text>
           </View>
           <View style={styles.itemThreeMetaContainer}>
-            {item.badge && (
+            {/* {item.badge && (
               <View
                 style={[
                   styles.badge,
                   item.badge === 'NEW' && { backgroundColor: colors.green },
                 ]}
-              >
-                <Text
+              > */}
+            {/*                 <Text
                   style={{ fontSize: 10, color: colors.white }}
                   styleName="bright"
                 >
                   {item.badge}
-                </Text>
+                </Text> }
               </View>
             )}
-            <Text style={styles.itemThreePrice}>{item.price}</Text>
+            {/* <Text style={styles.itemThreePrice}>{item.price}</Text> */}
           </View>
         </View>
       </View>
@@ -121,14 +115,14 @@ export default class GridsScreen extends React.Component {
 
     return (
       <View style={styles.container}>
-        <View style={{ height: 50 }}>
+        {/*         <View style={{ height: 50 }}>
           <RadioGroup
             selectedIndex={this.props.tabIndex}
             items={this.props.tabs}
             onChange={this.props.setTabIndex}
             underline
           />
-        </View>
+        </View> */}
         <FlatList
           keyExtractor={item =>
             item.id
