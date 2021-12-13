@@ -1,0 +1,7 @@
+{
+    "app_id": "helpline-lfecn",
+    "config_version": 20210101,
+    "name": "helpline",
+    "location": "SG",
+    "deployment_model": "LOCAL"
+}
