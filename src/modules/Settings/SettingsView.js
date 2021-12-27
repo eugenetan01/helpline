@@ -1,37 +1,58 @@
 import React from 'react';
 import { StyleSheet, View, Text } from 'react-native';
 import { useRoute } from '@react-navigation/native';
+import { openRealm, openRealmLocal } from '../../utils/realmApp';
+import { AsyncStorage } from 'react-native';
 
-import Icon from 'react-native-vector-icons/Entypo';
-import { colors, fonts } from '../../styles';
-
+import Realm from 'realm';
 import { Button, RadioGroup, Dropdown } from '../../components';
 import { TextInput } from 'react-native-ui-lib';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { toHumanSize } from 'i18n-js';
 
-const UserSchema = {
-  name: 'User',
-  properties: {
-    _id: 'string',
-    name: 'string',
-    postalCode: 'string',
-    unitNum: 'string',
-  },
-  primaryKey: '_id',
-};
-
 export default function SettingsScreen(props) {
-  const [postalcode, setPostalCode] = React.useState('');
-  const [_id, setID] = React.useState('');
-  const [name, setName] = React.useState('');
-  const [unitNum, setUnitNum] = React.useState('');
+  const getCurrentUser = async () => {
+    console.log('run');
+    const realm = await openRealm(id);
+    const user = realm.objects('User')[0];
+    return user;
+  };
 
-  handleSubmit = () => {
-    console.log(postalcode);
-    console.log(_id);
-    console.log(name);
-    console.log(unitNum);
+  const [postalcode, setPostalCode] = React.useState(getCurrentUser.postalCode);
+  const [id, setID] = React.useState(getCurrentUser._id);
+  const [name, setName] = React.useState(getCurrentUser.name);
+  const [unitNum, setUnitNum] = React.useState(getCurrentUser.unitNum);
+
+  handleSubmit = async () => {
+    const realm = await openRealm(id);
+    //"%%partition": "%%user.id" on
+    await AsyncStorage.setItem('key', id);
+    try {
+      realm.write(() => {
+        realm.create(
+          'User',
+          {
+            _id: id,
+            name: name,
+            postalCode: postalcode,
+            unitNum: unitNum,
+          },
+          'modified',
+        );
+      });
+      /* realm.write(() => {
+        realm.delete(x);
+      }); */
+
+      realm.syncSession.uploadAllLocalChanges().then(() => {
+        realm.close();
+      });
+      console.log(realm.objects('User'));
+
+      console.log(id);
+    } catch (e) {
+      console.log(e);
+    }
   };
 
   return (
@@ -47,22 +68,22 @@ export default function SettingsScreen(props) {
         Adding your information
       </Text>
       <TextInput
-        placeholder="Postal code"
+        placeholder={postalcode === null ? id : 'Postal Code'}
         onChangeText={text => setPostalCode(text)}
         style={{ margin: '7%' }}
       />
       <TextInput
-        placeholder="Unit number"
+        placeholder={unitNum === null ? id : 'Unit Number'}
         onChangeText={text => setUnitNum(text)}
         style={{ margin: '7%' }}
       />
       <TextInput
-        placeholder="Name"
+        placeholder={name === null ? id : 'Name'}
         onChangeText={text => setName(text)}
         style={{ margin: '7%' }}
       />
       <TextInput
-        placeholder="Mobile"
+        placeholder={id === null ? id : 'Mobile Number'}
         onChangeText={text => setID(text)}
         style={{ margin: '7%' }}
       />
