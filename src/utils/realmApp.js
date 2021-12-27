@@ -29,9 +29,9 @@ export async function anonymousLogin() {
 }
 
 export async function openRealm() {
-  //let UserSchema;
   const user = await anonymousLogin();
   const id = await AsyncStorage.getItem('key');
+  //console.log(id);
   let realm;
   try {
     // ...

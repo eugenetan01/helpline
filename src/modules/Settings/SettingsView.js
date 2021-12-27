@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, View, Text } from 'react-native';
+import { StyleSheet, View, Text, Alert } from 'react-native';
 import { useRoute } from '@react-navigation/native';
 import { openRealm, openRealmLocal } from '../../utils/realmApp';
 import { AsyncStorage } from 'react-native';
@@ -10,23 +10,35 @@ import { TextInput } from 'react-native-ui-lib';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { toHumanSize } from 'i18n-js';
 
+const changeConfirmed = () =>
+  Alert.alert(
+    'Profile changed',
+    'Profile details have been updated successfully',
+    [{ text: 'OK' }],
+  );
+
 export default function SettingsScreen(props) {
+  const [postalcode, setPostalCode] = React.useState('');
+  const [id, setID] = React.useState('');
+  const [name, setName] = React.useState('');
+  const [unitNum, setUnitNum] = React.useState('');
+
   const getCurrentUser = async () => {
-    console.log('run');
-    const realm = await openRealm(id);
-    const user = realm.objects('User')[0];
-    return user;
+    const realm = await openRealm();
+    const user = await realm.objects('User')[0];
+    setPostalCode(user.postalCode);
+    setID(user._id);
+    setName(user.name);
+    setUnitNum(user.unitNum);
   };
 
-  const [postalcode, setPostalCode] = React.useState(getCurrentUser.postalCode);
-  const [id, setID] = React.useState(getCurrentUser._id);
-  const [name, setName] = React.useState(getCurrentUser.name);
-  const [unitNum, setUnitNum] = React.useState(getCurrentUser.unitNum);
+  React.useEffect(() => {
+    getCurrentUser();
+  }, []);
 
   handleSubmit = async () => {
+    //await AsyncStorage.setItem('key', id);
     const realm = await openRealm(id);
-    //"%%partition": "%%user.id" on
-    await AsyncStorage.setItem('key', id);
     try {
       realm.write(() => {
         realm.create(
@@ -43,13 +55,12 @@ export default function SettingsScreen(props) {
       /* realm.write(() => {
         realm.delete(x);
       }); */
-
+      //console.log(getCurrentUser());
       realm.syncSession.uploadAllLocalChanges().then(() => {
         realm.close();
       });
-      console.log(realm.objects('User'));
-
-      console.log(id);
+      //console.log(realm.objects('User'));
+      changeConfirmed();
     } catch (e) {
       console.log(e);
     }
@@ -68,22 +79,22 @@ export default function SettingsScreen(props) {
         Adding your information
       </Text>
       <TextInput
-        placeholder={postalcode === null ? id : 'Postal Code'}
+        placeholder={postalcode ? postalcode : 'Postal Code'}
         onChangeText={text => setPostalCode(text)}
         style={{ margin: '7%' }}
       />
       <TextInput
-        placeholder={unitNum === null ? id : 'Unit Number'}
+        placeholder={unitNum ? unitNum : 'Unit Number'}
         onChangeText={text => setUnitNum(text)}
         style={{ margin: '7%' }}
       />
       <TextInput
-        placeholder={name === null ? id : 'Name'}
+        placeholder={name ? name : 'Name'}
         onChangeText={text => setName(text)}
         style={{ margin: '7%' }}
       />
       <TextInput
-        placeholder={id === null ? id : 'Mobile Number'}
+        placeholder={id ? id : 'Mobile Number'}
         onChangeText={text => setID(text)}
         style={{ margin: '7%' }}
       />
